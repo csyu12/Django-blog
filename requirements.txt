@@ -1,0 +1,4 @@
+-i https://pypi.tuna.tsinghua.edu.cn/simple/
+django~=3.0.8
+mysqlclient
+-e .
