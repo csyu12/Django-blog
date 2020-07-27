@@ -3,6 +3,9 @@ from django.db import models
 from blog.models import Post
 
 
+"""评论模型-单独放出来可以方便后续扩展"""
+
+
 class Comment(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -21,3 +24,6 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '评论'
+
+    def __str__(self):
+        return self.nickname
