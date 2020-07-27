@@ -14,7 +14,7 @@ class Link(models.Model):
         (STATUS_DELETE, '删除'),
     )
 
-    title = models.CharField(max_length=40, verbose_name='标题')
+    title = models.CharField(max_length=40, verbose_name='友链标题')
     href = models.URLField(verbose_name='链接')   # URLField默认长度的200
     owner = models.ForeignKey(User, verbose_name='作者', on_delete=models.DO_NOTHING)
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name='状态')
@@ -42,7 +42,7 @@ class SideBar(models.Model):
         (4, '最近评论'),
     )
 
-    title = models.CharField(max_length=40, verbose_name='标题')
+    title = models.CharField(max_length=40, verbose_name='侧边栏标题')
     display_type = models.PositiveIntegerField(default=1, choices=SIDE_TYPE, verbose_name='展示类型')
     content = models.CharField(max_length=500, blank=True, verbose_name='内容',
                                help_text='如果设置的不是HTML类型，可为空')
