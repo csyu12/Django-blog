@@ -6,7 +6,7 @@ from django_blog.base_admin import BaseOwnerAdmin
 
 
 @admin.register(Comment, site=custom_site)
-class CommentAdmin(BaseOwnerAdmin):
+class CommentAdmin(admin.ModelAdmin):
     list_display = ('target', 'nickname', 'website',
                     'email', 'status', 'created_time')
     list_display_links = ('nickname', )
