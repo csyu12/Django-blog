@@ -21,6 +21,5 @@ urlpatterns = [
     path('super_admin/', admin.site.urls),
     path('admin/', custom_site.urls),
     path('', include(('blog.urls', 'blog'), namespace='blog')),
-    # path('', include(('blog.urls', 'blog'), namespace='blog')),
-    # path('', include(('blog.urls', 'blog'), namespace='blog')),
+    path('assist/', include(('assist.urls', 'assist'), namespace='assist')),
 ]
