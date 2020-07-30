@@ -1,15 +1,28 @@
-from django.db.models import Q
+from datetime import date
+
+from django.core.cache import cache
+from django.db.models import Q, F
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from .models import Post, Tag, Category
 from assist.models import SideBar
-from comment.forms import CommentForm, Comment
 
 
 """ class-based view """
+# 通用数据模板，如：分类导航、侧边栏、底部导航等
+class CommonViewMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'sidebars': SideBar.get_all(),
+        })
+        context.update(Category.get_navs())
+        return context
+
+
 # 首页
-class IndexView(ListView):
+class IndexView(CommonViewMixin, ListView):
     queryset = Post.latest_posts()  # 最新帖子
     paginate_by = 5     # 分页
     context_object_name = 'post_list'   # 如果不设置此项，在模板中需要使用object_list变量
@@ -61,17 +74,6 @@ class TagView(IndexView):
         # return queryset.filter(tag_id=tag_id) # tag是多对多关系，queryset里没有tag_id
 
 
-# 通用数据模板，如：分类导航、侧边栏、底部导航等
-class CommonViewMixin:
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'sidebars': SideBar.get_all(),
-        })
-        context.update(Category.get_navs())
-        return context
-
-
 # 详情页
 class PostDetailView(CommonViewMixin, DetailView):
     queryset = Post.latest_posts()
@@ -79,13 +81,37 @@ class PostDetailView(CommonViewMixin, DetailView):
     template_name = 'blog/detail.html'
     pk_url_kwarg = 'post_id'
 
-    def get_context_data(self, **kwargs):
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        context.update({
-            'comment_form': CommentForm,
-            'comment_list': Comment.get_by_target(self.request.path),
-        })
-        return context
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        self.handle_visited()
+        return response
+
+    def handle_visited(self):
+        increase_pv = False
+        increase_uv = False
+        uid = self.request.uid
+        pv_key = 'pv:%s:%s' % (uid, self.request.path)
+        uv_key = 'uv:%s:%s:%s' % (uid, str(date.today()), self.request.path)
+
+        """ 
+        Django的缓存未配置的情况下，使用的是内存缓存，如果是多进程会有问题，因为内存缓存在进程间独立。
+        对于本系统，暂时用cache缓存；对于大型系统，可以更换为Redis
+        """
+        # 用户访问数据存到缓存中，判断是否有缓存，如果没有则进行+1操作
+        if not cache.get(pv_key):
+            increase_pv = True
+            cache.set(pv_key, 1, 1*60)  # 1分钟有效
+
+        if not cache.get(uv_key):
+            increase_uv = True
+            cache.set(uv_key, 1, 24*60*60)  # 24小时有效
+
+        if increase_pv and increase_uv:
+            Post.objects.filter(pk=self.object.id).update(pv=F('pv')+1, uv=F('uv')+1)
+        elif increase_pv:
+            Post.objects.filter(pk=self.object.id).update(pv=F('pv')+1)
+        elif increase_uv:
+            Post.objects.filter(pk=self.object.id).update(uv=F('uv')+1)
 
 
 # 搜索
