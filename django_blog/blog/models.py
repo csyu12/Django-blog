@@ -94,7 +94,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    @staticmethod
+    @staticmethod   # 声明静态方法，获取标签id指定博客
     def get_by_tag(tag_id):
         try:
             tag = Tag.objects.get(id=tag_id)
@@ -107,7 +107,7 @@ class Post(models.Model):
 
         return post_list, tag
 
-    @staticmethod
+    @staticmethod   # 声明静态方法，获取分类id指定博客
     def get_by_category(category_id):
         try:
             category = Category.objects.get(id=category_id)
@@ -120,10 +120,10 @@ class Post(models.Model):
 
         return post_list, category
 
-    @classmethod
+    @classmethod    # 获取最新文章
     def latest_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL)
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-uv')
 
-    @classmethod
+    @classmethod    # 获取热门文章
     def hot_posts(cls):
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
