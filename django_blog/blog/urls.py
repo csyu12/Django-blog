@@ -1,9 +1,13 @@
-from django.urls import path
+from django.urls import path, re_path
+from django.contrib.sitemaps import views as sitemap_views
 
 from .views import (
     IndexView, CategoryView, TagView,
     PostDetailView, SearchView, AuthorView
 )
+from .rss import LatestPostFeed
+from .sitemap import PostSitemap
+
 
 urlpatterns = [
     # function view
@@ -19,4 +23,6 @@ urlpatterns = [
     path('post/<int:post_id>/', PostDetailView.as_view(), name='post_detail'),
     path('search/', SearchView.as_view(), name='search'),
     path('author/<int:owner_id>/', AuthorView.as_view(), name='author'),
+    re_path('rss|feed/', LatestPostFeed(), name='rss'),
+    re_path('sitemap\.xml', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
 ]
