@@ -1,3 +1,4 @@
+import mistune
 from django import forms
 
 from .models import Comment
@@ -40,6 +41,7 @@ class CommentForm(forms.ModelForm):
         # 控制评论的长度，如果内容太少，直接抛出异常
         if len(content) < 10:
             raise forms.ValidationError('短了！！！')
+        content = mistune.markdown(content)
         return content
 
     class Meta:
