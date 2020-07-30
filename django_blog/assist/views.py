@@ -1,4 +1,3 @@
-from django.shortcuts import render, HttpResponse
 from django.views.generic import ListView
 
 from blog.views import CommonViewMixin
