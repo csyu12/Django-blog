@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', custom_site.urls),
     path('', include(('blog.urls', 'blog'), namespace='blog')),
     path('assist/', include(('assist.urls', 'assist'), namespace='assist')),
+    path('comment/', include(('comment.urls', 'comment'), namespace='comment'))
 ]
