@@ -71,14 +71,6 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
         return queryset
 
 
-# from django import forms
-# def form_factory(owner):
-#     class my_form(forms.ModelForm):
-#         m_file = forms.ModelChoiceField(
-#             queryset=Category.objects.filter(owner=owner)
-#         )
-#     return my_form
-
 # 博客主体，保留最全的admin定制
 @admin.register(Post, site=custom_site)
 class PostAdmin(BaseOwnerAdmin):
@@ -98,10 +90,9 @@ class PostAdmin(BaseOwnerAdmin):
 
     # save_on_top = True    # 详情页顶部保存相关按钮
 
-    filter_horizontal = ('tag', )
-    # filter_vertical = ('tag', )
+    filter_horizontal = ('tag', )   # 水平
+    # filter_vertical = ('tag', )   # 垂直
 
-    # fields = (('category', 'title'), 'desc', 'status', 'content', 'tag',)
     fieldsets = (
         ('基础配置', {
             'description': '基础配置描述',
