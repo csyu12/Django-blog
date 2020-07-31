@@ -4,8 +4,9 @@ from django import forms
 from .models import Comment
 
 
+# 前端评论渲染
 class CommentForm(forms.ModelForm):
-    # 为了样式，需要重新定义各字段的组件
+    # 重新定义需要在前端展示的字段，可以随时修改样式
     nickname = forms.CharField(
         label='昵称',
         max_length=50,
@@ -24,14 +25,14 @@ class CommentForm(forms.ModelForm):
         label='网站',
         max_length=100,
         widget=forms.widgets.URLInput(
-            attrs={'class': 'form-control', 'style': 'width: 60;'}
+            attrs={'class': 'form-control', 'style': 'width: 60%;'}
         )
     )
     content = forms.CharField(
         label='内容',
         max_length=500,
         widget=forms.widgets.Textarea(
-            attrs={'rows': 6, 'cols': 60, 'class': 'form-control'}
+            attrs={'rows': 6, 'cols': 50, 'class': 'form-control'}
         )
     )
 
