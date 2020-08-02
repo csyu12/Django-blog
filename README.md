@@ -86,8 +86,8 @@
 
    > 也可以运行manage.py文件，修改配置，如下图。后续只需要运行manage.py即可
 
-     ![Image text](C:/Users/21582/Desktop/csyu/code/course_work/PLSWebsite/README_IMG/3.png)
-     ![Image text](C:/Users/21582/Desktop/csyu/code/course_work/PLSWebsite/README_IMG/manage.jpg)
+     ![Image text](./README_IMG/3.png)
+     ![Image text](./README_IMG/manage.jpg)
 
 6. 进入后台
 
