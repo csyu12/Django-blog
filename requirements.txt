@@ -1,5 +1,5 @@
 -i https://pypi.tuna.tsinghua.edu.cn/simple/
 django~=3.0.8
-mysqlclient
-mistune
+mysqlclient~=1.4.6
+mistune~=0.8.4
 -e .
